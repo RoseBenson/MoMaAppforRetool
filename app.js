@@ -24,11 +24,11 @@ loadLocalBtn.addEventListener('click', async () => {
     
     try {
         // Fetch the local CSV files
-        const artistsResponse = await fetch('artists.csv');
+        const artistsResponse = await fetch('Artists.csv');
         const artworksResponse = await fetch('artworks_sampled.csv');
         
         if (!artistsResponse.ok || !artworksResponse.ok) {
-            throw new Error('Could not load CSV files. Please ensure artists.csv and artworks_sampled.csv are in the same folder.');
+            throw new Error('Could not load CSV files. Please ensure Artists.csv and artworks_sampled.csv are in the same folder.');
         }
         
         artistsFileContent = await artistsResponse.text();
