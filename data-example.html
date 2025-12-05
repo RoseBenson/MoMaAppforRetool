@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Example - CSV Structure Guide</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 40px 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            border-radius: 15px;
+            margin-bottom: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .section {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            color: #333;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #667eea;
+        }
+
+        .info-box {
+            background: #f0f4ff;
+            border-left: 4px solid #667eea;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+
+        .info-box h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .info-box ul {
+            margin-left: 20px;
+        }
+
+        .info-box li {
+            margin: 5px 0;
+        }
+
+        .highlight {
+            background: #fff3cd;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-weight: 600;
+        }
+
+        .warning {
+            background: #f8d7da;
+            border-left: 4px solid #dc3545;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+            color: #721c24;
+        }
+
+        .success {
+            background: #d4edda;
+            border-left: 4px solid #28a745;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+            color: #155724;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+            margin: 20px 0;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            font-size: 0.9rem;
+        }
+
+        th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        td {
+            padding: 10px 12px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        tr:hover {
+            background: #f8f9fa;
+        }
+
+        .duplicate-column {
+            background: #ffebee !important;
+            position: relative;
+        }
+
+        .duplicate-column::after {
+            content: '🔄';
+            position: absolute;
+            right: 5px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .removed {
+            text-decoration: line-through;
+            opacity: 0.5;
+        }
+
+        .empty-cell {
+            background: #fff3cd;
+            font-style: italic;
+            color: #856404;
+        }
+
+        .code-block {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .comparison-box {
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .before {
+            background: #ffebee;
+            border: 2px solid #ef5350;
+        }
+
+        .after {
+            background: #e8f5e9;
+            border: 2px solid #66bb6a;
+        }
+
+        @media (max-width: 768px) {
+            .comparison {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 CSV Data Structure Guide</h1>
+            <p>Working example of Artists and Artworks data with processing requirements</p>
+        </div>
+
+        <!-- Overview Section -->
+        <div class="section">
+            <h2 class="section-title">🎯 Data Processing Overview</h2>
+            
+            <div class="stats">
+                <div class="stat-card">
+                    <div class="stat-number">15,539</div>
+                    <div class="stat-label">Total Artists</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">5,392</div>
+                    <div class="stat-label">Initial Artworks</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">~5,000</div>
+                    <div class="stat-label">After Filtering</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">7</div>
+                    <div class="stat-label">Duplicate Columns</div>
+                </div>
+            </div>
+
+            <div class="info-box">
+                <h3>Processing Steps:</h3>
+                <ul>
+                    <li>✅ Parse both CSV files</li>
+                    <li>✅ Remove artworks where <span class="highlight">ConstituentID</span> is empty</li>
+                    <li>✅ Remove duplicate columns from Artworks data</li>
+                    <li>✅ Create Map data structure for artist-to-artwork associations</li>
+                    <li>✅ Handle artworks with multiple artists</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Artists CSV Structure -->
+        <div class="section">
+            <h2 class="section-title">👨‍🎨 Artists.csv Structure (Original Data)</h2>
+            
+            <div class="info-box">
+                <h3>Columns: 9 fields</h3>
+                <p><strong>Key Column:</strong> <span class="highlight">ConstituentID</span> - Used for mapping to artworks</p>
+            </div>
+
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ConstituentID</th>
+                            <th>DisplayName</th>
+                            <th>ArtistBio</th>
+                            <th>Nationality</th>
+                            <th>Gender</th>
+                            <th>BeginDate</th>
+                            <th>EndDate</th>
+                            <th>Wiki QID</th>
+                            <th>ULAN</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>Robert Arneson</td>
+                            <td>American, 1930–1992</td>
+                            <td>American</td>
+                            <td>male</td>
+                            <td>1930</td>
+                            <td>1992</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>Doroteo Arnaiz</td>
+                            <td>Spanish, born 1936</td>
+                            <td>Spanish</td>
+                            <td>male</td>
+                            <td>1936</td>
+                            <td>0</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>3115</td>
+                            <td>Ernst Ludwig Kirchner</td>
+                            <td>German, 1880–1938</td>
+                            <td>German</td>
+                            <td>male</td>
+                            <td>1880</td>
+                            <td>1938</td>
+                            <td>Q153095</td>
+                            <td>500024382</td>
+                        </tr>
+                        <tr>
+                            <td>7166</td>
+                            <td>Ludwig Mies van der Rohe</td>
+                            <td>American, born Germany. 1886–1969</td>
+                            <td>American</td>
+                            <td>male</td>
+                            <td>1886</td>
+                            <td>1969</td>
+                            <td>Q41508</td>
+                            <td>500004519</td>
+                        </tr>
+                        <tr>
+                            <td>912</td>
+                            <td>John Cage</td>
+                            <td>American, 1912–1992</td>
+                            <td>American</td>
+                            <td>male</td>
+                            <td>1912</td>
+                            <td>1992</td>
+                            <td>Q180727</td>
+                            <td>500017523</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="success">
+                <strong>✓ Artists table stays unchanged</strong> - All columns are kept as-is
+            </div>
+        </div>
+
+        <!-- Artworks BEFORE Processing -->
+        <div class="section">
+            <h2 class="section-title">🖼️ artworks_sampled.csv - BEFORE Processing</h2>
+            
+            <div class="warning">
+                <strong>⚠️ Issues to Fix:</strong><br>
+                • Contains <span class="highlight">duplicate columns</span> that also exist in Artists.csv<br>
+                • Some rows have <span class="highlight">empty ConstituentID</span> values<br>
+                • Has 30+ columns (many are duplicates)
+            </div>
+
+            <div class="info-box">
+                <h3>Duplicate Columns to Remove:</h3>
+                <p>These 7 columns exist in both Artists and Artworks data:</p>
+                <ul>
+                    <li><span class="highlight">ArtistBio</span> ❌</li>
+                    <li><span class="highlight">Nationality</span> ❌</li>
+                    <li><span class="highlight">BeginDate</span> ❌</li>
+                    <li><span class="highlight">EndDate</span> ❌</li>
+                    <li><span class="highlight">Gender</span> ❌</li>
+                    <li><span class="highlight">Artist</span> ❌</li>
+                </ul>
+                <p style="margin-top: 10px;"><strong>Note:</strong> <span class="highlight">ConstituentID</span> is kept because it's needed for the mapping!</p>
+            </div>
+
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th class="duplicate-column">Artist</th>
+                            <th>ConstituentID</th>
+                            <th class="duplicate-column">ArtistBio</th>
+                            <th class="duplicate-column">Nationality</th>
+                            <th class="duplicate-column">BeginDate</th>
+                            <th class="duplicate-column">EndDate</th>
+                            <th class="duplicate-column">Gender</th>
+                            <th>Date</th>
+                            <th>Medium</th>
+                            <th>Department</th>
+                            <th>ImageURL</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>IIT Robert F. Carr Memorial Chapel</td>
+                            <td class="duplicate-column">Ludwig Mies van der Rohe</td>
+                            <td>7166</td>
+                            <td class="duplicate-column">(American, born Germany. 1886–1969)</td>
+                            <td class="duplicate-column">(American)</td>
+                            <td class="duplicate-column">(1886)</td>
+                            <td class="duplicate-column">(1969)</td>
+                            <td class="duplicate-column">(male)</td>
+                            <td>1949—1952</td>
+                            <td>Pencil on paper</td>
+                            <td>Architecture & Design</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>Three Bathers at the Moritzburg Lakes</td>
+                            <td class="duplicate-column">Ernst Ludwig Kirchner</td>
+                            <td>3115</td>
+                            <td class="duplicate-column">(German, 1880–1938)</td>
+                            <td class="duplicate-column">(German)</td>
+                            <td class="duplicate-column">(1880)</td>
+                            <td class="duplicate-column">(1938)</td>
+                            <td class="duplicate-column">(male)</td>
+                            <td>1909, published 1910</td>
+                            <td>Drypoint</td>
+                            <td>Drawings & Prints</td>
+                            <td>https://www.moma.org/media/W1siZi...</td>
+                        </tr>
+                        <tr>
+                            <td>Corsage Kit</td>
+                            <td class="duplicate-column">Ken Friedman</td>
+                            <td>2007</td>
+                            <td class="duplicate-column">(American, born 1949)</td>
+                            <td class="duplicate-column">(American)</td>
+                            <td class="duplicate-column">(1939)</td>
+                            <td class="duplicate-column">(0)</td>
+                            <td class="duplicate-column">(male)</td>
+                            <td>1971</td>
+                            <td>Cardboard box with printed paper</td>
+                            <td>Drawings & Prints</td>
+                            <td>https://www.moma.org/media/W1siZi...</td>
+                        </tr>
+                        <tr>
+                            <td>Double page in-text plate</td>
+                            <td class="duplicate-column">John Cage, Lois Long</td>
+                            <td>912, 3590</td>
+                            <td class="duplicate-column">(American, 1912–1992) (American, 1918 – 2005)</td>
+                            <td class="duplicate-column">(American) (American)</td>
+                            <td class="duplicate-column">(1912) (1918)</td>
+                            <td class="duplicate-column">(1992) (2005)</td>
+                            <td class="duplicate-column">(male) (female)</td>
+                            <td>1983</td>
+                            <td>Illustrated Book</td>
+                            <td>Drawings & Prints</td>
+                            <td></td>
+                        </tr>
+                        <tr style="background: #fff3cd;">
+                            <td>Artwork with No Artist</td>
+                            <td class="duplicate-column empty-cell">(empty)</td>
+                            <td class="empty-cell">(empty string)</td>
+                            <td class="duplicate-column empty-cell"></td>
+                            <td class="duplicate-column empty-cell"></td>
+                            <td class="duplicate-column empty-cell"></td>
+                            <td class="duplicate-column empty-cell"></td>
+                            <td class="duplicate-column empty-cell"></td>
+                            <td>2020</td>
+                            <td>Mixed Media</td>
+                            <td>Contemporary</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="warning">
+                <strong>🔴 Row Removal Example:</strong> The last row will be removed because ConstituentID is empty!
+            </div>
+        </div>
+
+        <!-- Artworks AFTER Processing -->
+        <div class="section">
+            <h2 class="section-title">✨ artworks_sampled.csv - AFTER Processing</h2>
+            
+            <div class="success">
+                <strong>✓ Clean Data:</strong><br>
+                • Duplicate columns removed<br>
+                • Only rows with valid ConstituentID<br>
+                • ~5,000 rows remaining (down from 5,392)<br>
+                • Ready for mapping to artists
+            </div>
+
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>ConstituentID</th>
+                            <th>Date</th>
+                            <th>Medium</th>
+                            <th>Dimensions</th>
+                            <th>Department</th>
+                            <th>DateAcquired</th>
+                            <th>ObjectID</th>
+                            <th>ImageURL</th>
+                            <th>OnView</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>IIT Robert F. Carr Memorial Chapel</td>
+                            <td>7166</td>
+                            <td>1949—1952</td>
+                            <td>Pencil on paper</td>
+                            <td>(106.7 x 137.1 cm.)</td>
+                            <td>Architecture & Design</td>
+                            <td>1968-04-11</td>
+                            <td>459008</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>Three Bathers at the Moritzburg Lakes</td>
+                            <td>3115</td>
+                            <td>1909, published 1910</td>
+                            <td>Drypoint</td>
+                            <td>17.9 x 20.6 cm</td>
+                            <td>Drawings & Prints</td>
+                            <td>1997-05-28</td>
+                            <td>64661</td>
+                            <td>https://www.moma.org/media/...</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>Corsage Kit</td>
+                            <td>2007</td>
+                            <td>1971</td>
+                            <td>Cardboard box</td>
+                            <td>12.4 × 6.7 × 2.5 cm</td>
+                            <td>Drawings & Prints</td>
+                            <td>2008-10-08</td>
+                            <td>135222</td>
+                            <td>https://www.moma.org/media/...</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>Double page in-text plate</td>
+                            <td>912, 3590</td>
+                            <td>1983</td>
+                            <td>Illustrated Book</td>
+                            <td>11.8 x 23 cm</td>
+                            <td>Drawings & Prints</td>
+                            <td>1984-02-01</td>
+                            <td>10955</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="info-box">
+                <h3>Notice:</h3>
+                <ul>
+                    <li>No more duplicate columns (Artist, ArtistBio, Nationality, etc.)</li>
+                    <li>All rows have valid ConstituentID</li>
+                    <li>Multiple artists handled: "912, 3590" maps to both John Cage AND Lois Long</li>
+                    <li>All other artwork-specific data preserved</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Map Data Structure -->
+        <div class="section">
+            <h2 class="section-title">🗺️ Artist-to-Artwork Map Structure</h2>
+            
+            <div class="info-box">
+                <h3>JavaScript Map() Implementation</h3>
+                <p>Creates efficient lookup from artist ConstituentID to their artworks</p>
+            </div>
+
+            <div class="code-block">
+// Map structure after processing:
+artistToArtworksMap = Map {
+  "7166" => [
+    { Title: "IIT Robert F. Carr Memorial Chapel", Date: "1949—1952", ... }
+  ],
+  "3115" => [
+    { Title: "Three Bathers at the Moritzburg Lakes", Date: "1909", ... }
+  ],
+  "912" => [
+    { Title: "Double page in-text plate", Date: "1983", ... }
+  ],
+  "3590" => [
+    { Title: "Double page in-text plate", Date: "1983", ... }  // Same artwork
+  ],
+  "2007" => [
+    { Title: "Corsage Kit", Date: "1971", ... }
+  ]
+}
+
+// Multiple artists for one artwork are handled automatically:
+// ConstituentID "912, 3590" creates TWO Map entries:
+// - Artist 912 (John Cage) points to the artwork
+// - Artist 3590 (Lois Long) points to the same artwork
+            </div>
+
+            <div class="comparison">
+                <div class="comparison-box before">
+                    <h3>❌ Without Map</h3>
+                    <p>To find artworks for an artist:</p>
+                    <ul>
+                        <li>Loop through all 5,000 artworks</li>
+                        <li>Check each ConstituentID</li>
+                        <li>Parse comma-separated values</li>
+                        <li>Time complexity: O(n)</li>
+                    </ul>
+                </div>
+                <div class="comparison-box after">
+                    <h3>✅ With Map</h3>
+                    <p>To find artworks for an artist:</p>
+                    <ul>
+                        <li>Instant lookup by ID</li>
+                        <li>Pre-parsed associations</li>
+                        <li>Get array of artworks</li>
+                        <li>Time complexity: O(1)</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Usage Example -->
+        <div class="section">
+            <h2 class="section-title">💡 How It Works</h2>
+            
+            <div class="code-block">
+// 1. User searches for "Ludwig Mies van der Rohe"
+// 2. Find artist in artistsData by DisplayName
+const artist = artistsData.find(a => 
+  a.DisplayName === "Ludwig Mies van der Rohe"
+);
+// Result: { ConstituentID: "7166", DisplayName: "Ludwig Mies...", ... }
+
+// 3. Get artworks using Map (instant lookup!)
+const artworks = artistToArtworksMap.get("7166");
+// Result: Array of artwork objects
+
+// 4. Display artworks with fallback images
+artworks.forEach(artwork => {
+  const imageUrl = artwork.ImageURL || "[placeholder]";
+  displayArtworkCard(artwork, imageUrl);
+});
+
+// 5. Handle "Not Found" case
+if (!artworks || artworks.length === 0) {
+  showNoResultsMessage();
+}
+            </div>
+
+            <div class="success">
+                <strong>✓ Benefits:</strong><br>
+                • No data duplication (artist info from Artists table only)<br>
+                • Fast lookup using Map data structure<br>
+                • Handles multiple artists per artwork<br>
+                • Clean separation of concerns<br>
+                • ~5,000 valid artwork records
+            </div>
+        </div>
+
+        <!-- Data Summary -->
+        <div class="section">
+            <h2 class="section-title">📋 Final Data Summary</h2>
+            
+            <div class="stats">
+                <div class="stat-card">
+                    <div class="stat-number">15,539</div>
+                    <div class="stat-label">Artists (All)</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">~4,981</div>
+                    <div class="stat-label">Artworks (Filtered)</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">~3,200</div>
+                    <div class="stat-label">Artists with Artworks</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">23</div>
+                    <div class="stat-label">Columns (Artworks After)</div>
+                </div>
+            </div>
+
+            <div class="info-box">
+                <h3>Key Takeaways:</h3>
+                <ul>
+                    <li>✅ No repeating data between tables</li>
+                    <li>✅ ConstituentID is the linking key</li>
+                    <li>✅ Empty ConstituentID rows are filtered out</li>
+                    <li>✅ Duplicate columns removed from Artworks</li>
+                    <li>✅ Map provides O(1) lookup performance</li>
+                    <li>✅ Multiple artists per artwork handled correctly</li>
+                    <li>✅ Placeholder images for missing ImageURL</li>
+                    <li>✅ Search limited to artists with artworks in collection</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
