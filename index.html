@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Art Gallery Collection</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;700&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- Header Section -->
+        <header class="header">
+            <h1 class="header-title">Art Gallery Collection</h1>
+            <p class="header-subtitle">Discover masterpieces from renowned artists</p>
+        </header>
+
+        <!-- Upload Section -->
+        <section class="upload-section" id="uploadSection">
+            <div class="upload-card">
+                <h2 class="section-title">Collection Data</h2>
+                <div class="upload-options">
+                    <button id="loadLocalBtn" class="btn-primary">Load Sample Data</button>
+                    <div class="divider">or</div>
+                    <button id="toggleUploadBtn" class="btn-secondary">Upload Your Own Files</button>
+                </div>
+                <div class="upload-grid" id="uploadGrid" style="display: none; margin-top: 30px;">
+                    <div class="upload-item">
+                        <label for="artistsFile" class="upload-label">
+                            <svg class="upload-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                <polyline points="17 8 12 3 7 8"></polyline>
+                                <line x1="12" y1="3" x2="12" y2="15"></line>
+                            </svg>
+                            <span class="upload-text">Artists CSV</span>
+                            <span class="file-name" id="artistsFileName">No file selected</span>
+                        </label>
+                        <input type="file" id="artistsFile" accept=".csv" class="file-input">
+                    </div>
+                    <div class="upload-item">
+                        <label for="artworksFile" class="upload-label">
+                            <svg class="upload-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                <polyline points="17 8 12 3 7 8"></polyline>
+                                <line x1="12" y1="3" x2="12" y2="15"></line>
+                            </svg>
+                            <span class="upload-text">Artworks CSV</span>
+                            <span class="file-name" id="artworksFileName">No file selected</span>
+                        </label>
+                        <input type="file" id="artworksFile" accept=".csv" class="file-input">
+                    </div>
+                    <button id="processBtn" class="btn-primary" disabled style="grid-column: 1 / -1;">Process Collections</button>
+                </div>
+                <div id="uploadStatus" class="upload-status"></div>
+            </div>
+        </section>
+
+        <!-- Data Tables Section -->
+        <section class="tables-section" id="tablesSection" style="display: none;">
+            <div class="tabs">
+                <button class="tab-btn active" data-tab="artists">Artists</button>
+                <button class="tab-btn" data-tab="artworks">Artworks</button>
+            </div>
+            
+            <div class="tab-content active" id="artists-tab">
+                <div class="table-header">
+                    <h2 class="section-title">Artists Collection</h2>
+                    <div class="table-info" id="artistsCount"></div>
+                </div>
+                <div class="table-container">
+                    <table id="artistsTable" class="data-table"></table>
+                </div>
+            </div>
+            
+            <div class="tab-content" id="artworks-tab">
+                <div class="table-header">
+                    <h2 class="section-title">Artworks Collection</h2>
+                    <div class="table-info" id="artworksCount"></div>
+                </div>
+                <div class="table-container">
+                    <table id="artworksTable" class="data-table"></table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Artist Selection & Artwork Display Section -->
+        <section class="gallery-section" id="gallerySection" style="display: none;">
+            <div class="search-container">
+                <h2 class="section-title">Explore Artist Collections</h2>
+                <div class="search-box">
+                    <input 
+                        type="text" 
+                        id="artistSearch" 
+                        class="search-input" 
+                        placeholder="Search for an artist..."
+                        autocomplete="off"
+                    >
+                    <div class="search-results" id="searchResults"></div>
+                </div>
+            </div>
+
+            <!-- Selected Artist Info -->
+            <div id="artistInfo" class="artist-info" style="display: none;">
+                <div class="artist-header">
+                    <h3 id="artistName" class="artist-name"></h3>
+                    <div id="artistDetails" class="artist-details"></div>
+                </div>
+            </div>
+
+            <!-- Artworks Grid -->
+            <div id="artworksDisplay" class="artworks-container">
+                <div id="noResults" class="no-results" style="display: none;">
+                    <svg class="no-results-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="12" y1="8" x2="12" y2="12"></line>
+                        <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                    </svg>
+                    <h3>No Artworks Found</h3>
+                    <p>This artist doesn't have any artworks in the current collection.</p>
+                </div>
+                <div id="artworksList" class="artworks-grid"></div>
+            </div>
+        </section>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
